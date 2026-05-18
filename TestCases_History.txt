@@ -1,0 +1,37 @@
+Phase 1::Login Page Test Cases:=
+
+1. Verify successful login with valid credentials
+2. Verify error message appears for invalid password
+3. Verify Forgot Password button redirects to the Forgot Password page
+4. Verify Show Password toggle works correctly (mask → visible → mask)
+5. Verify validation message appears when login is attempted with empty fields
+6. Verify password required validation when only Login ID is entered
+7. Verify Login ID required validation when only password is entered
+8. Verify invalid Login ID formats are rejected
+9. Verify login button state for empty and filled fields
+10. Verify login page can still be accessed even after successful login
+11. Verify user is redirected to Home Dashboard after successful login
+
+
+Phase 2::Initiate Onboarding Page Test Cases:=
+
+1. Verify successful onboarding initiation with valid candidate details
+2. Verify validation message when First Name field is empty
+3. Verify validation message when Last Name field is empty
+4. Verify validation message when Candidate Email field is empty
+5. Verify system rejects invalid email format
+6. Verify Designation dropdown loads and allows selection
+7. Verify Department dropdown loads and allows selection
+8. Verify Role dropdown loads and allows selection
+9. Verify Level dropdown loads and allows selection
+10. Verify Employee Status dropdown loads and allows selection
+11. Verify Date of Joining field accepts valid date
+12. Verify system validation for invalid Date of Joining format
+13. Verify Employment Mode dropdown loads and allows selection
+14. Verify Link Validity field accepts numeric values only
+15. Verify system rejects non-numeric values in Link Validity field
+16. Verify system validation when Link Validity field is empty
+17. Verify onboarding cannot be initiated when mandatory fields are missing
+18. Verify Generate Onboarding button functionality after filling required fields
+19. Verify onboarding link is generated successfully after form submission
+20. Verify onboarding link is sent to candidate email after generation.

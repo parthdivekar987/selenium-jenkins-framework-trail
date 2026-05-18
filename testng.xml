@@ -1,0 +1,83 @@
+<!--<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">-->
+<!--<suite name="HCM Full Regression Suite" parallel="false">-->
+
+<!--    <listeners>-->
+<!--        <listener class-name="com.onboarding.automation.listeners.TestListener"/>-->
+<!--    </listeners>-->
+
+<!--    &lt;!&ndash; Leave Management Module - All Tests &ndash;&gt;-->
+<!--    <test name="Leave Management Module Flow">-->
+<!--        <classes>-->
+<!--            &lt;!&ndash; Login Test &ndash;&gt;-->
+<!--            <class name="com.onboarding.automation.tests.LoginTest"/>-->
+
+<!--            &lt;!&ndash; Leave Management Navigation Tests &ndash;&gt;-->
+<!--            <class name="com.onboarding.automation.tests.leave.LeaveManagementTest"/>-->
+
+<!--            &lt;!&ndash; Leave Approval Workflow Tests &ndash;&gt;-->
+<!--            <class name="com.onboarding.automation.tests.leave.LeaveApprovalWorkflowTest"/>-->
+
+<!--            &lt;!&ndash; Credit Leave Module Tests &ndash;&gt;-->
+<!--            <class name="com.onboarding.automation.tests.leave.creditleave.ManualCreditTest"/>-->
+
+<!--            &lt;!&ndash; Bulk Apply Module Tests &ndash;&gt;-->
+<!--            <class name="com.onboarding.automation.tests.leave.bulkapply.BulkApplyTest"/>-->
+
+<!--            &lt;!&ndash;Workflow Setup Module Tests&ndash;&gt;-->
+<!--            <class name="com.onboarding.automation.tests.leave.workflows.WorkflowSetupTest"/>-->
+
+<!--            &lt;!&ndash; Pattern Rule Module Tests&ndash;&gt;-->
+<!--            <class name="com.onboarding.automation.tests.leave.patternrule.PatternRuleTest"/>-->
+
+<!--            &lt;!&ndash; Configurations Module Tests&ndash;&gt;-->
+<!--            <class name="com.onboarding.automation.tests.leave.configurations.ConfigurationsTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+
+<!--    &lt;!&ndash; Workforce Onboarding Module Flow &ndash;&gt;-->
+<!--    <test name="Workforce Onboarding Module Flow">-->
+<!--        <classes>-->
+<!--            <class name="com.onboarding.automation.tests.InitiateOnboardingTest"/>-->
+<!--        </classes>-->
+<!--    </test>-->
+
+<!--</suite>-->
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="HCM Full Regression Suite" parallel="false">
+
+    <listeners>
+        <listener class-name="com.onboarding.automation.listeners.TestListener"/>
+    </listeners>
+
+    <!-- Leave Management Module - All Tests -->
+    <test name="Leave Management Module Flow">
+        <classes>
+            <class name="com.onboarding.automation.tests.LoginTest"/>
+            <class name="com.onboarding.automation.tests.leave.LeaveManagementTest"/>
+            <class name="com.onboarding.automation.tests.leave.LeaveApprovalWorkflowTest"/>
+            <class name="com.onboarding.automation.tests.leave.creditleave.ManualCreditTest"/>
+            <class name="com.onboarding.automation.tests.leave.bulkapply.BulkApplyTest"/>
+            <class name="com.onboarding.automation.tests.leave.workflows.WorkflowSetupTest"/>
+            <class name="com.onboarding.automation.tests.leave.patternrule.PatternRuleTest"/>
+            <class name="com.onboarding.automation.tests.leave.configurations.ConfigurationsTest"/>
+        </classes>
+    </test>
+
+    <!-- Workforce Onboarding Module - All 4 Buttons -->
+    <test name="Workforce Onboarding Module Flow">
+        <classes>
+            <!-- Button 1: Initiate Onboarding -->
+            <class name="com.onboarding.automation.tests.InitiateOnboardingTest"/>
+
+            <!-- Button 2: Extend / Reactivate Link -->
+            <class name="com.onboarding.automation.tests.ExtendReactivateTest"/>
+
+            <!-- Button 3: Onboarding Approval -->
+            <class name="com.onboarding.automation.tests.OnboardingApprovalTest"/>
+
+            <!-- Button 4: Manage Workforce -->
+            <class name="com.onboarding.automation.tests.ManageWorkforceTest"/>
+        </classes>
+    </test>
+
+</suite>
