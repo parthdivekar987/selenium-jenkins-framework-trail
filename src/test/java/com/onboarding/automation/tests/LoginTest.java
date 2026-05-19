@@ -9,8 +9,6 @@ import org.testng.annotations.Test;
 
 public class LoginTest extends BaseTest {
 
-    private static final String VALID_LOGIN_ID = "OMI-0076";
-    private static final String VALID_PASSWORD = "Omfys@1234";
     private static final String INVALID_PASSWORD = "wrong123";
 
     private static final String LOGIN_URL =
@@ -33,7 +31,7 @@ public class LoginTest extends BaseTest {
     @Test(priority = 1)
     public void TC_LG_01_verifySuccessfulLogin(){
 
-        loginPage.loginAs(VALID_LOGIN_ID, VALID_PASSWORD);
+        loginPage.loginAs(VALID_USERNAME, VALID_PASSWORD);
 
         Assert.assertTrue(
                 loginPage.waitForSuccessfulLogin(),
@@ -44,7 +42,7 @@ public class LoginTest extends BaseTest {
     @Test(priority = 2)
     public void TC_LG_02_invalidPassword(){
 
-        loginPage.loginAs(VALID_LOGIN_ID, INVALID_PASSWORD);
+        loginPage.loginAs(VALID_USERNAME, INVALID_PASSWORD);
 
         Assert.assertTrue(
                 loginPage.isInvalidLoginMessageDisplayed(),
@@ -92,7 +90,7 @@ public class LoginTest extends BaseTest {
     @Test(priority = 6)
     public void TC_LG_06_onlyLoginId(){
 
-        loginPage.enterLoginId(VALID_LOGIN_ID);
+        loginPage.enterLoginId(VALID_USERNAME);
 
         loginPage.clickLogin();
 
@@ -139,7 +137,7 @@ public class LoginTest extends BaseTest {
         Assert.assertTrue(loginPage.isLoginIdFieldEmpty());
         Assert.assertTrue(loginPage.isPasswordFieldEmpty());
 
-        loginPage.enterLoginId(VALID_LOGIN_ID);
+        loginPage.enterLoginId(VALID_USERNAME);
         loginPage.enterPassword(VALID_PASSWORD);
 
         Assert.assertTrue(loginPage.isLoginButtonEnabled());
@@ -149,7 +147,7 @@ public class LoginTest extends BaseTest {
     @Test(priority = 10)
     public void TC_LG_10_loginPageAccessAfterLogin(){
 
-        loginPage.loginAs(VALID_LOGIN_ID, VALID_PASSWORD);
+        loginPage.loginAs(VALID_USERNAME, VALID_PASSWORD);
 
         Assert.assertTrue(loginPage.waitForSuccessfulLogin());
 
@@ -165,7 +163,7 @@ public class LoginTest extends BaseTest {
     @Test(priority = 11)
     public void TC_LG_11_dashboardRedirect(){
 
-        loginPage.loginAs(VALID_LOGIN_ID, VALID_PASSWORD);
+        loginPage.loginAs(VALID_USERNAME, VALID_PASSWORD);
 
         Assert.assertTrue(loginPage.waitForSuccessfulLogin());
     }

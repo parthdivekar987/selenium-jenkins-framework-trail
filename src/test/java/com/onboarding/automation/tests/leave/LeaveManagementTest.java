@@ -22,7 +22,7 @@ public class LeaveManagementTest extends BaseTest {
     public void initiateLeaveModule() {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.openLoginPage();
-        loginPage.loginAs("OMI-0076", "Omfys@1234");
+        loginPage.loginAs(VALID_USERNAME, VALID_PASSWORD);
         Assert.assertTrue(loginPage.waitForSuccessfulLogin(), "Login failed!");
 
         driver.get(LEAVE_BASE_URL);

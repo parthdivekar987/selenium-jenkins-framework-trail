@@ -97,6 +97,8 @@ public class BaseTest {
 
     public static WebDriver driver;
     protected static WebDriverWait wait;
+    protected static final String VALID_USERNAME = "OMI-0076";
+    protected static final String VALID_PASSWORD = "Omfys@1234";
     private static boolean isLoggedIn = false;
     private static boolean isNavigated = false;
 
@@ -144,7 +146,7 @@ public class BaseTest {
         try {
             LoginPage loginPage = new LoginPage(driver);
             loginPage.openLoginPage();
-            loginPage.loginAs("OMI-0076", "");
+            loginPage.loginAs(VALID_USERNAME, VALID_PASSWORD);
 
             wait.until(d -> !d.getCurrentUrl().contains("/login"));
             isLoggedIn = true;

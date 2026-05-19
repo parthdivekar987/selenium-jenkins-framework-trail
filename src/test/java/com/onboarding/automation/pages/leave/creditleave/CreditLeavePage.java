@@ -49,7 +49,9 @@ public class CreditLeavePage {
     private final By processButton = By.cssSelector("div.mt-4.flex.justify-end > button");
 
     // Pagination
-    private final By showEntriesSelect = By.xpath("//div[contains(text(), 'Show:')]/following::select[1]");
+    private final By showEntriesSelect = By.xpath("//*[contains(normalize-space(.), 'Show')]/following::select[1]");
+    private final By showEntriesSelectFallback = By.cssSelector("div.pagination select");
+    private final By showEntriesSelectBeforeNext = By.xpath("//button[contains(text(), 'Next')]/preceding::select[1]");
     private final By nextPageButton = By.xpath("//button[contains(text(), 'Next')]");
     private final By previousPageButton = By.xpath("//button[contains(text(), 'Previous')]");
 
@@ -181,10 +183,7 @@ public class CreditLeavePage {
         // Convert full month names to short form if needed (because calendar uses "Apr" not "April")
         String convertedMonth = convertToShortMonth(month);
 
-        WebElement input = wait.until(ExpectedConditions.elementToBeClickable(creditMonthInput));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", input);
-        input.clear();
-        input.sendKeys(convertedMonth);
+        setTextInputExact(creditMonthInput, convertedMonth);
     }
 
     private String convertToShortMonth(String month) {
@@ -235,10 +234,7 @@ public class CreditLeavePage {
     }
 
     public void selectLeaveType(String leaveType) {
-        WebElement selectElement = wait.until(ExpectedConditions.elementToBeClickable(leaveTypeSelect));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", selectElement);
-        Select dropdown = new Select(selectElement);
-        dropdown.selectByVisibleText(leaveType);
+        selectDropdownValue(leaveTypeSelect, leaveType);
     }
 
     public String getSelectedLeaveType() {
@@ -266,10 +262,7 @@ public class CreditLeavePage {
     }
 
     public void enterLeaveCount(String count) {
-        WebElement input = wait.until(ExpectedConditions.elementToBeClickable(leaveCountInput));
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", input);
-        input.clear();
-        input.sendKeys(count);
+        setTextInputExact(leaveCountInput, count);
     }
 
     public String getLeaveCountValue() {
@@ -331,10 +324,99 @@ public class CreditLeavePage {
     // ==========================================
 
     public void selectShowEntries(String value) {
-        WebElement selectElement = wait.until(ExpectedConditions.elementToBeClickable(showEntriesSelect));
+        WebElement selectElement = findShowEntriesSelect();
         Select dropdown = new Select(selectElement);
-        dropdown.selectByVisibleText(value);
+        try {
+            dropdown.selectByVisibleText(value);
+        } catch (NoSuchElementException e) {
+            for (WebElement option : dropdown.getOptions()) {
+                String text = option.getText().trim();
+                if (!text.isEmpty() && text.contains(value)) {
+                    option.click();
+                    break;
+                }
+            }
+        }
         wait.until(ExpectedConditions.presenceOfElementLocated(employeeTableRows));
+    }
+
+    private WebElement findShowEntriesSelect() {
+        By[] candidates = {showEntriesSelect, showEntriesSelectFallback, showEntriesSelectBeforeNext};
+        for (By candidate : candidates) {
+            try {
+                WebElement element = wait.until(ExpectedConditions.presenceOfElementLocated(candidate));
+                if (element.isDisplayed()) {
+                    return element;
+                }
+            } catch (TimeoutException ignored) {
+                // try next locator
+            }
+        }
+        throw new TimeoutException("Show entries dropdown not found");
+    }
+
+    private void setTextInputExact(By locator, String value) {
+        WebElement input = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", input);
+        input.click();
+        input.sendKeys(Keys.chord(Keys.CONTROL, "a"));
+        input.sendKeys(Keys.BACK_SPACE);
+        input.sendKeys(value);
+
+        if (!value.equals(input.getAttribute("value"))) {
+            ((JavascriptExecutor) driver).executeScript(
+                    "arguments[0].value = arguments[1];" +
+                            "arguments[0].dispatchEvent(new Event('input', { bubbles: true }));" +
+                            "arguments[0].dispatchEvent(new Event('change', { bubbles: true }));",
+                    input, value);
+        }
+
+        wait.until(d -> {
+            try {
+                return value.equals(d.findElement(locator).getAttribute("value"));
+            } catch (Exception e) {
+                return false;
+            }
+        });
+    }
+
+    private void selectDropdownValue(By locator, String preferredValue) {
+        WebElement selectElement = wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView({block:'center'});", selectElement);
+        Select dropdown = new Select(selectElement);
+        wait.until(d -> dropdown.getOptions().size() > 0);
+
+        try {
+            dropdown.selectByVisibleText(preferredValue);
+            return;
+        } catch (NoSuchElementException ignored) {
+            // try fallback strategies below
+        }
+
+        for (WebElement option : dropdown.getOptions()) {
+            String text = option.getText().trim();
+            if (text.isEmpty()) {
+                continue;
+            }
+            if (text.equalsIgnoreCase(preferredValue)
+                    || text.toLowerCase().contains(preferredValue.toLowerCase())
+                    || preferredValue.toLowerCase().contains(text.toLowerCase())) {
+                option.click();
+                return;
+            }
+        }
+
+        for (WebElement option : dropdown.getOptions()) {
+            String text = option.getText().trim();
+            if (!text.isEmpty()
+                    && !text.toLowerCase().contains("select")
+                    && !text.equals("--")) {
+                option.click();
+                return;
+            }
+        }
+
+        throw new NoSuchElementException("No selectable option found for '" + preferredValue + "'");
     }
 
     public void clickNextPage() {

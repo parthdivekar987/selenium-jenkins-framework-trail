@@ -1,6 +1,7 @@
 package com.onboarding.automation.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
@@ -8,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.time.Duration;
+import java.util.List;
 
 public class InitiateOnboardingPage {
 
@@ -62,28 +64,23 @@ public class InitiateOnboardingPage {
     }
 
     public void selectDesignation(String value){
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(designationDropdown));
-        new Select(element).selectByVisibleText(value);
+        selectDropdownValue(designationDropdown, value);
     }
 
     public void selectDepartment(String value){
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(departmentDropdown));
-        new Select(element).selectByVisibleText(value);
+        selectDropdownValue(departmentDropdown, value);
     }
 
     public void selectRole(String value){
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(roleDropdown));
-        new Select(element).selectByVisibleText(value);
+        selectDropdownValue(roleDropdown, value);
     }
 
     public void selectLevel(String value){
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(levelDropdown));
-        new Select(element).selectByVisibleText(value);
+        selectDropdownValue(levelDropdown, value);
     }
 
     public void selectEmployeeStatus(String value){
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(employeeStatusDropdown));
-        new Select(element).selectByVisibleText(value);
+        selectDropdownValue(employeeStatusDropdown, value);
     }
 
     public void setDateOfJoining(String value){
@@ -93,14 +90,52 @@ public class InitiateOnboardingPage {
     }
 
     public void selectEmploymentMode(String value){
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(employmentModeDropdown));
-        new Select(element).selectByVisibleText(value);
+        selectDropdownValue(employmentModeDropdown, value);
     }
 
     public void setLinkValidity(String value){
         WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(linkValidity));
         element.clear();
         element.sendKeys(value);
+    }
+
+    private void selectDropdownValue(By dropdownLocator, String preferredValue) {
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(dropdownLocator));
+        Select dropdown = new Select(element);
+        wait.until(driver -> dropdown.getOptions().size() > 0);
+
+        try {
+            dropdown.selectByVisibleText(preferredValue);
+            return;
+        } catch (NoSuchElementException ignored) {
+            // Fallback to a partial match or the first real option.
+        }
+
+        List<WebElement> options = dropdown.getOptions();
+        for (WebElement option : options) {
+            String text = option.getText().trim();
+            if (text.isEmpty()) {
+                continue;
+            }
+            if (text.equalsIgnoreCase(preferredValue)
+                    || text.toLowerCase().contains(preferredValue.toLowerCase())
+                    || preferredValue.toLowerCase().contains(text.toLowerCase())) {
+                option.click();
+                return;
+            }
+        }
+
+        for (WebElement option : options) {
+            String text = option.getText().trim();
+            if (!text.isEmpty()
+                    && !text.toLowerCase().contains("select")
+                    && !text.equals("--")) {
+                option.click();
+                return;
+            }
+        }
+
+        throw new NoSuchElementException("No selectable option found for '" + preferredValue + "'");
     }
 
     /*

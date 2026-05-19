@@ -11,16 +11,13 @@ public class InitiateOnboardingTest extends BaseTest {
 
     private LoginPage loginPage;
     private InitiateOnboardingPage onboarding;
-
-    private static final String USERNAME = "OMI-0076";
-    private static final String PASSWORD = "Omfys@1234";
     private static final String ONBOARDING_URL = "https://uat_mcdp_hcm.omfysgroup.com/onboarding_admin";
 
     @BeforeMethod
     public void setupLogin(){
         loginPage = new LoginPage(driver);
         loginPage.openLoginPage();
-        loginPage.loginAs(USERNAME, PASSWORD);
+        loginPage.loginAs(VALID_USERNAME, VALID_PASSWORD);
 
         Assert.assertTrue(loginPage.waitForSuccessfulLogin(), "Login failed!");
 
