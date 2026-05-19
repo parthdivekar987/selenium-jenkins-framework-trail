@@ -13,7 +13,7 @@ public class InitiateOnboardingTest extends BaseTest {
     private InitiateOnboardingPage onboarding;
 
     private static final String USERNAME = "OMI-0076";
-    private static final String PASSWORD = "Omfys@123";
+    private static final String PASSWORD = "Omfys@1234";
     private static final String ONBOARDING_URL = "https://uat_mcdp_hcm.omfysgroup.com/onboarding_admin";
 
     @BeforeMethod

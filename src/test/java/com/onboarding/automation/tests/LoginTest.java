@@ -10,7 +10,7 @@ import org.testng.annotations.Test;
 public class LoginTest extends BaseTest {
 
     private static final String VALID_LOGIN_ID = "OMI-0076";
-    private static final String VALID_PASSWORD = "Omfys@123";
+    private static final String VALID_PASSWORD = "Omfys@1234";
     private static final String INVALID_PASSWORD = "wrong123";
 
     private static final String LOGIN_URL =

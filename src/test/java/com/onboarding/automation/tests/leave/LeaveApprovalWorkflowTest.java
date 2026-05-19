@@ -18,7 +18,7 @@ public class LeaveApprovalWorkflowTest extends BaseTest {
     public void setupWorkflow() {
         LoginPage loginPage = new LoginPage(driver);
         loginPage.openLoginPage();
-        loginPage.loginAs("OMI-0076", "Omfys@123");
+        loginPage.loginAs("OMI-0076", "Omfys@1234");
 
         // NEW: Wait for the login redirect to finish before jumping to Leave
         WebDriverWait syncWait = new WebDriverWait(driver, Duration.ofSeconds(10));

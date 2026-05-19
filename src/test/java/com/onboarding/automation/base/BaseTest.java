@@ -53,7 +53,7 @@
 //        try {
 //            LoginPage loginPage = new LoginPage(driver);
 //            loginPage.openLoginPage();
-//            loginPage.loginAs("OMI-0076", "Omfys@123");
+//            loginPage.loginAs("OMI-0076", "");
 //            // Wait for successful login (URL no longer contains "login")
 //            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
 //            wait.until(ExpectedConditions.not(ExpectedConditions.urlContains("/login")));
@@ -144,7 +144,7 @@ public class BaseTest {
         try {
             LoginPage loginPage = new LoginPage(driver);
             loginPage.openLoginPage();
-            loginPage.loginAs("OMI-0076", "Omfys@123");
+            loginPage.loginAs("OMI-0076", "");
 
             wait.until(d -> !d.getCurrentUrl().contains("/login"));
             isLoggedIn = true;
