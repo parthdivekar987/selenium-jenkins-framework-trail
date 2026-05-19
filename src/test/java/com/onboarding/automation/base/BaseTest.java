@@ -76,112 +76,112 @@
 //        }
 //    }
 //}
-package com.onboarding.automation.base;
-
-import com.onboarding.automation.pages.LoginPage;
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.By;
-import org.openqa.selenium.PageLoadStrategy;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeMethod;
-
-import java.time.Duration;
-
-public class BaseTest {
-
-    public static WebDriver driver;
-    protected static WebDriverWait wait;
-    protected static final String VALID_USERNAME = "OMI-0076";
-    protected static final String VALID_PASSWORD = "Omfys@1234";
-    private static boolean isLoggedIn = false;
-    private static boolean isNavigated = false;
-
-    @BeforeSuite(alwaysRun = true)
-    public void setUp() {
-        if (driver != null) {
-            return;
-        }
-
-        WebDriverManager.chromedriver().setup();
-
-        ChromeOptions options = new ChromeOptions();
-        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
-
-        options.addArguments(
-                "--start-maximized",
-                "--disable-notifications",
-                "--disable-popup-blocking",
-                "--disable-extensions",
-                "--disable-blink-features=AutomationControlled",
-                "--remote-allow-origins=*",
-                "--log-level=3",
-                "--disable-new-tab-first-run",
-                "--no-first-run"
-        );
-
-        driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(45));
-        driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(30));
-
-        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-
-        System.out.println("🚀 Browser initialized ONCE for all tests");
-
-        // ✅ DO LOGIN AND NAVIGATION HERE (Before any test class runs)
-        performLoginOnce();
-        navigateToOnboardingModule();
-    }
-
-    private void performLoginOnce() {
-        if (isLoggedIn) {
-            return;
-        }
-        try {
-            LoginPage loginPage = new LoginPage(driver);
-            loginPage.openLoginPage();
-            loginPage.loginAs(VALID_USERNAME, VALID_PASSWORD);
-
-            wait.until(d -> !d.getCurrentUrl().contains("/login"));
-            isLoggedIn = true;
-            System.out.println("✅ Login successful ONCE");
-        } catch (Exception e) {
-            throw new RuntimeException("Login failed. Cannot continue.", e);
-        }
-    }
-
-    private void navigateToOnboardingModule() {
-        if (isNavigated) {
-            System.out.println("✅ Already on Onboarding page");
-            return;
-        }
-        try {
-            driver.get("https://uat_mcdp_hcm.omfysgroup.com/onboarding_admin");
-
-            // Wait for the Onboarding tabs to be visible
-            wait.until(ExpectedConditions.visibilityOfElementLocated(
-                    By.xpath("//div[@id='root']/div/div/main/div/div[2]/div/div/button")
-            ));
-
-            isNavigated = true;
-            System.out.println("✅ Navigated to Onboarding module");
-        } catch (Exception e) {
-            System.out.println("⚠️ Warning: Onboarding navigation issue - " + e.getMessage());
-        }
-    }
-
-    @AfterSuite(alwaysRun = true)
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-            driver = null;
-            System.out.println("🔚 Browser closed after all tests");
-        }
-    }
-}
+//package com.onboarding.automation.base;
+//
+//import com.onboarding.automation.pages.LoginPage;
+//import io.github.bonigarcia.wdm.WebDriverManager;
+//import org.openqa.selenium.By;
+//import org.openqa.selenium.PageLoadStrategy;
+//import org.openqa.selenium.WebDriver;
+//import org.openqa.selenium.chrome.ChromeDriver;
+//import org.openqa.selenium.chrome.ChromeOptions;
+//import org.openqa.selenium.support.ui.ExpectedConditions;
+//import org.openqa.selenium.support.ui.WebDriverWait;
+//import org.testng.annotations.AfterSuite;
+//import org.testng.annotations.BeforeSuite;
+//import org.testng.annotations.BeforeMethod;
+//
+//import java.time.Duration;
+//
+//public class BaseTest {
+//
+//    public static WebDriver driver;
+//    protected static WebDriverWait wait;
+//    protected static final String VALID_USERNAME = "OMI-0076";
+//    protected static final String VALID_PASSWORD = "Omfys@1234";
+//    private static boolean isLoggedIn = false;
+//    private static boolean isNavigated = false;
+//
+//    @BeforeSuite(alwaysRun = true)
+//    public void setUp() {
+//        if (driver != null) {
+//            return;
+//        }
+//
+//        WebDriverManager.chromedriver().setup();
+//
+//        ChromeOptions options = new ChromeOptions();
+//        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+//
+//        options.addArguments(
+//                "--start-maximized",
+//                "--disable-notifications",
+//                "--disable-popup-blocking",
+//                "--disable-extensions",
+//                "--disable-blink-features=AutomationControlled",
+//                "--remote-allow-origins=*",
+//                "--log-level=3",
+//                "--disable-new-tab-first-run",
+//                "--no-first-run"
+//        );
+//
+//        driver = new ChromeDriver(options);
+//        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+//        driver.manage().timeouts().pageLoadTimeout(Duration.ofSeconds(45));
+//        driver.manage().timeouts().scriptTimeout(Duration.ofSeconds(30));
+//
+//        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+//
+//        System.out.println("🚀 Browser initialized ONCE for all tests");
+//
+//        // ✅ DO LOGIN AND NAVIGATION HERE (Before any test class runs)
+//        performLoginOnce();
+//        navigateToOnboardingModule();
+//    }
+//
+//    private void performLoginOnce() {
+//        if (isLoggedIn) {
+//            return;
+//        }
+//        try {
+//            LoginPage loginPage = new LoginPage(driver);
+//            loginPage.openLoginPage();
+//            loginPage.loginAs(VALID_USERNAME, VALID_PASSWORD);
+//
+//            wait.until(d -> !d.getCurrentUrl().contains("/login"));
+//            isLoggedIn = true;
+//            System.out.println("✅ Login successful ONCE");
+//        } catch (Exception e) {
+//            throw new RuntimeException("Login failed. Cannot continue.", e);
+//        }
+//    }
+//
+//    private void navigateToOnboardingModule() {
+//        if (isNavigated) {
+//            System.out.println("✅ Already on Onboarding page");
+//            return;
+//        }
+//        try {
+//            driver.get("https://uat_mcdp_hcm.omfysgroup.com/onboarding_admin");
+//
+//            // Wait for the Onboarding tabs to be visible
+//            wait.until(ExpectedConditions.visibilityOfElementLocated(
+//                    By.xpath("//div[@id='root']/div/div/main/div/div[2]/div/div/button")
+//            ));
+//
+//            isNavigated = true;
+//            System.out.println("✅ Navigated to Onboarding module");
+//        } catch (Exception e) {
+//            System.out.println("⚠️ Warning: Onboarding navigation issue - " + e.getMessage());
+//        }
+//    }
+//
+//    @AfterSuite(alwaysRun = true)
+//    public void tearDown() {
+//        if (driver != null) {
+//            driver.quit();
+//            driver = null;
+//            System.out.println("🔚 Browser closed after all tests");
+//        }
+//    }
+//}
