@@ -98,7 +98,7 @@ public class BaseTest {
     public static WebDriver driver;
     protected static WebDriverWait wait;
     protected static final String VALID_USERNAME = "OMI-0076";
-    protected static final String VALID_PASSWORD = "Omfys@1234";
+    protected static final String VALID_PASSWORD = "Omfys@123";
     private static boolean isLoggedIn = false;
     private static boolean isNavigated = false;
 
