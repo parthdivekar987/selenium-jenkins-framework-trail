@@ -89,7 +89,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
-import org.testng.annotations.BeforeMethod;
 
 import java.time.Duration;
 
@@ -97,8 +96,9 @@ public class BaseTest {
 
     public static WebDriver driver;
     protected static WebDriverWait wait;
-    protected static final String VALID_USERNAME = "OMI-0076";
-    protected static final String VALID_PASSWORD = "Omfys@123";
+    // Read credentials from environment or .env via EnvConfig (has sensible defaults)
+    protected static final String VALID_USERNAME = EnvConfig.get("EMP_CODE", "OMI-0076");
+    protected static final String VALID_PASSWORD = EnvConfig.get("EMP_PASSWORD", "Omfys@123");
     private static boolean isLoggedIn = false;
     private static boolean isNavigated = false;
 
@@ -108,22 +108,55 @@ public class BaseTest {
             return;
         }
 
+        // Load .env if present and merge with system envs
+        EnvConfig.load();
+
         WebDriverManager.chromedriver().setup();
 
-        ChromeOptions options = new ChromeOptions();
-        options.setPageLoadStrategy(PageLoadStrategy.EAGER);
+ChromeOptions options = new ChromeOptions();
+options.setPageLoadStrategy(PageLoadStrategy.EAGER);
 
-        options.addArguments(
-                "--start-maximized",
-                "--disable-notifications",
-                "--disable-popup-blocking",
-                "--disable-extensions",
-                "--disable-blink-features=AutomationControlled",
-                "--remote-allow-origins=*",
-                "--log-level=3",
-                "--disable-new-tab-first-run",
-                "--no-first-run"
-        );
+// Read headless mode from .env (defaults to true for background execution)
+boolean headless = Boolean.parseBoolean(EnvConfig.get("HEADLESS", "true"));
+String windowSize = EnvConfig.get("WINDOW_SIZE", "1920,1080");
+
+System.out.println("\n========== BROWSER SETUP ==========");
+System.out.println("Headless Mode: " + headless);
+System.out.println("Window Size: " + windowSize);
+System.out.println("====================================\n");
+
+// Common arguments for both headless and visible modes
+options.addArguments(
+        "--disable-blink-features=AutomationControlled",
+        "--remote-allow-origins=*",
+        "--log-level=3",
+        "--no-first-run",
+        "--disable-new-tab-first-run",
+        "--disable-notifications",
+        "--disable-popup-blocking",
+        "--disable-extensions",
+        "--disable-default-apps",
+        "--disable-sync"
+);
+
+if (headless) {
+    // Enable headless mode with multiple fallback options for compatibility
+    options.addArguments(
+            "--headless=new",  // Newer headless mode (Chrome 109+)
+            "--headless",      // Fallback to older headless mode
+            "--window-size=" + windowSize,
+            "--disable-gpu",   // Disable GPU acceleration in headless mode
+            "--no-sandbox",    // Important for CI/CD environments
+            "--disable-dev-shm-usage"  // Prevent memory issues in headless mode
+    );
+    System.out.println("✅ HEADLESS MODE ENABLED - Browser running in background");
+} else {
+    // Visible browser mode for debugging
+    options.addArguments(
+            "--start-maximized"
+    );
+    System.out.println("⚠️  VISIBLE MODE ENABLED - Browser window will be displayed");
+}
 
         driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
@@ -132,7 +165,10 @@ public class BaseTest {
 
         wait = new WebDriverWait(driver, Duration.ofSeconds(20));
 
-        System.out.println("🚀 Browser initialized ONCE for all tests");
+        System.out.println("🚀 Browser initialized ONCE for all tests (headless=" + headless + ")");
+        System.out.println("✅ WebDriver ready for automation");
+        System.out.println("Current URL: " + driver.getCurrentUrl());
+        System.out.println("=========================================\n");
 
         // ✅ DO LOGIN AND NAVIGATION HERE (Before any test class runs)
         performLoginOnce();
@@ -162,7 +198,8 @@ public class BaseTest {
             return;
         }
         try {
-            driver.get("https://uat_mcdp_hcm.omfysgroup.com/onboarding_admin");
+            String baseUrl = EnvConfig.get("BASE_URL", "https://uat_mcdp_hcm.omfysgroup.com");
+            driver.get(baseUrl + "/onboarding_admin");
 
             // Wait for the Onboarding tabs to be visible
             wait.until(ExpectedConditions.visibilityOfElementLocated(
